@@ -1,359 +1,279 @@
-import React, { useState, useMemo } from 'react';
-import { 
-  ChevronRight, 
-  ChevronLeft, 
-  RotateCcw, 
-  CheckCircle2, 
-  Sparkles,
-  Zap,
-  Layout,
-  Sun,
-  Waves,
-  Flower2,
-  Leaf,
-  Sprout,
-  Target,
-  Users,
-  Box,
-  TrendingUp,
-  Eye
-} from 'lucide-react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Cultivation Audit</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Work+Sans:wght@300;400;600;900&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-const QUIZ_DATA = [
-  {
-    id: 1,
-    category: "Visual Foundation",
-    question: "How consistent is your business identity across your website, socials, and physical touchpoints?",
-    options: [
-      { text: "A bit disjointed—it feels like different brands depending on the platform.", points: 1 },
-      { text: "Mostly consistent, but some areas feel like they've been outgrown.", points: 3 },
-      { text: "Seamless. Our customers recognize us instantly, no matter where they find us.", points: 5 }
-    ]
-  },
-  {
-    id: 2,
-    category: "Brand Voice",
-    question: "Do you have a clear way of speaking that attracts your ideal client naturally?",
-    options: [
-      { text: "I'm not sure we have a defined 'voice' yet.", points: 1 },
-      { text: "We have a vibe, but we struggle to put it into the right words.", points: 3 },
-      { text: "Yes, our messaging is clear, welcoming, and converts the right people.", points: 5 }
-    ]
-  },
-  {
-    id: 3,
-    category: "Strategic Roots",
-    question: "Is your brand built on a clear strategy, or are you making decisions on the fly?",
-    options: [
-      { text: "We're mostly winging it and hoping for the best.", points: 1 },
-      { text: "We have basic goals, but they aren't documented or followed daily.", points: 3 },
-      { text: "Grounded. Every decision we make is backed by a solid plan.", points: 5 }
-    ]
-  },
-  {
-    id: 4,
-    category: "Customer Journey",
-    question: "How would you describe the experience a client has from discovery to purchase?",
-    options: [
-      { text: "A bit manual and clunky—we lose people in the process.", points: 1 },
-      { text: "Functional and professional, but it lacks a 'wow' factor.", points: 3 },
-      { text: "Exceptional. It feels high-touch and intentional at every step.", points: 5 }
-    ]
-  },
-  {
-    id: 5,
-    category: "Market Presence",
-    question: "How easily does your brand stand out among competitors in your specific niche?",
-    options: [
-      { text: "We tend to blend in with everyone else in our industry.", points: 1 },
-      { text: "We have some unique elements, but they could be much stronger.", points: 3 },
-      { text: "Distinct. We have a clear 'edge' that makes us the obvious choice.", points: 5 }
-    ]
-  },
-  {
-    id: 6,
-    category: "Brand Recognition",
-    question: "If your logo was removed, would customers still recognize your brand by its style alone?",
-    options: [
-      { text: "Likely not—our look isn't distinct enough yet.", points: 1 },
-      { text: "Maybe, if they follow us closely and know our colors well.", points: 3 },
-      { text: "Absolutely. Our visual language is recognizable even without a logo.", points: 5 }
-    ]
-  },
-  {
-    id: 7,
-    category: "Engagement & Community",
-    question: "How deep is the connection your audience feels with your brand's mission?",
-    options: [
-      { text: "They see us as a service, but the personal connection is low.", points: 1 },
-      { text: "They like us, but they aren't 'advocates' for the brand yet.", points: 3 },
-      { text: "Deep connection. Our community shares our values and spreads the word.", points: 5 }
-    ]
-  },
-  {
-    id: 8,
-    category: "Delivery & Presentation",
-    question: "Does your final delivery (packaging or digital handoff) reflect your premium value?",
-    options: [
-      { text: "It's purely functional—it gets the job done but isn't 'pretty'.", points: 1 },
-      { text: "It's neat and professional, but lacks a signature brand touch.", points: 3 },
-      { text: "It's an experience. The presentation is as good as the product.", points: 5 }
-    ]
-  },
-  {
-    id: 9,
-    category: "Future Scalability",
-    question: "Could your current branding handle a 5x increase in business or a new product line?",
-    options: [
-      { text: "No, the current look would feel too 'small' or restricted.", points: 1 },
-      { text: "It could work, but it would require a lot of manual tweaking.", points: 3 },
-      { text: "Yes, our brand system is flexible and built to scale effortlessly.", points: 5 }
-    ]
-  },
-  {
-    id: 10,
-    category: "Confidence & Impact",
-    question: "When you share your website or business card, do you feel it truly represents your potential?",
-    options: [
-      { text: "I actually feel a bit embarrassed to share it sometimes.", points: 1 },
-      { text: "It's okay for now, but I know we can do much better.", points: 3 },
-      { text: "Absolute confidence. It's a perfect reflection of my work.", points: 5 }
-    ]
-  }
-];
+    <style>
+        :root {
+            --carnelian: #b92a0f;
+            --champagne: #f7e4cc;
+            --rajah: #f8ad5c;
+            --dark-slate: #325453;
+        }
+        
+        body {
+            background-color: var(--carnelian);
+            color: var(--dark-slate);
+            font-family: 'Work Sans', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
 
-const App = () => {
-  const [currentStep, setCurrentStep] = useState(-1);
-  const [answers, setAnswers] = useState({});
-  const [isFinished, setIsFinished] = useState(false);
-
-  // Palette: 60-30-10 Rule
-  const colors = {
-    carnelian: "#b92a0f",  // 60% - Grounded Terracotta
-    champagne: "#f7e4cc",  // 30% - Creamy Petals
-    rajah: "#f8ad5c",      // 10% - Sun-kissed Pollen (Accent)
-    darkSlate: "#325453",  // Contrast - Botanical Teal
-    white: "#ffffff"
-  };
-
-  const totalScore = useMemo(() => {
-    return Object.values(answers).reduce((acc, curr) => acc + curr, 0);
-  }, [answers]);
-
-  const maxPossibleScore = QUIZ_DATA.length * 5;
-
-  const getResultTier = () => {
-    const percentage = (totalScore / maxPossibleScore) * 100;
-    if (percentage >= 80) return {
-      title: "The Perennial Brand",
-      description: "Your brand is in full, magnificent bloom. It is hardy, recognizable, and deeply rooted in strategy. You are ready to scale with absolute confidence.",
-      icon: Flower2
-    };
-    if (percentage >= 50) return {
-      title: "The Budding Growth",
-      description: "You have a healthy foundation, but your brand needs more structure to reach its full height. A few strategic shifts will clarify your vision.",
-      icon: Sprout
-    };
-    return {
-      title: "The Emerging Sapling",
-      description: "You have a great idea, but the brand 'soil' needs more nutrients. Let's deepen your strategy before we focus on the aesthetics.",
-      icon: Leaf
-    };
-  };
-
-  const handleSelect = (points) => {
-    setAnswers(prev => ({ ...prev, [currentStep]: points }));
-    if (currentStep < QUIZ_DATA.length - 1) {
-      setTimeout(() => setCurrentStep(prev => prev + 1), 400);
-    } else {
-      setTimeout(() => setIsFinished(true), 600);
-    }
-  };
-
-  const resetQuiz = () => {
-    setAnswers({});
-    setCurrentStep(-1);
-    setIsFinished(false);
-  };
-
-  const ActiveIcon = isFinished ? getResultTier().icon : Layout;
-
-  return (
-    <div 
-      className="min-h-screen relative overflow-hidden selection:bg-[#325453] selection:text-white"
-      style={{ 
-        backgroundColor: colors.carnelian, 
-        color: colors.darkSlate,
-        fontFamily: '"Work Sans", sans-serif' 
-      }}
-    >
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Work+Sans:wght@300;400;600;900&display=swap');
         .font-roca { font-family: 'Lora', serif; }
         .font-work { font-family: 'Work Sans', sans-serif; }
-      `}</style>
-
-      {/* Texture Overlay */}
-      <div className="fixed inset-0 pointer-events-none opacity-[0.12] mix-blend-overlay" 
-           style={{ backgroundImage: `url("https://www.transparenttextures.com/patterns/natural-paper.png")` }} />
-
-      {/* Background Decor */}
-      <div className="fixed top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
-        <div className="absolute top-10 right-[-5%] opacity-10 rotate-45">
-            <Leaf size={300} strokeWidth={0.5} className="text-white" />
-        </div>
-        <div className="absolute bottom-[-10%] left-[-5%] opacity-10 -rotate-12">
-            <Flower2 size={400} strokeWidth={0.5} className="text-white" />
-        </div>
-      </div>
-
-      <main className="relative z-10 max-w-2xl mx-auto px-8 py-16 md:py-24">
         
-        {/* Header */}
-        <header className="text-center mb-16">
-          <div className="flex justify-center items-center gap-4 mb-6">
-            <div className="h-[1px] w-12 bg-[#f8ad5c]" />
-            <span className="text-[10px] uppercase tracking-[0.6em] font-work font-black text-[#f7e4cc]">
-              Design & Growth Studio
-            </span>
-            <div className="h-[1px] w-12 bg-[#f8ad5c]" />
-          </div>
-          <h1 className="text-5xl md:text-7xl font-roca font-light mb-4 tracking-tight leading-none italic text-[#f7e4cc]">
-            Brand <span className="not-italic font-bold text-white">Cultivation</span>
-          </h1>
-          <p className="text-lg opacity-80 font-work tracking-widest uppercase text-[9px] font-black text-[#f8ad5c]">
-            Intentional Identity for Small Business
-          </p>
+        .texture-overlay {
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+        }
+
+        .hidden { display: none; }
+        
+        /* Smooth transitions */
+        .fade-in {
+            animation: fadeIn 0.7s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .progress-bar {
+            transition: width 0.7s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fixed inset-0 pointer-events-none opacity-[0.12] mix-blend-overlay texture-overlay"></div>
+    <div class="fixed top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
+        <div class="absolute top-10 right-[-5%] opacity-10 rotate-45">
+            <i data-lucide="leaf" style="width: 300px; height: 300px;" stroke-width="0.5" class="text-white"></i>
+        </div>
+        <div class="absolute bottom-[-10%] left-[-5%] opacity-10 -rotate-12">
+            <i data-lucide="flower-2" style="width: 400px; height: 400px;" stroke-width="0.5" class="text-white"></i>
+        </div>
+    </div>
+
+    <main class="relative z-10 max-w-2xl mx-auto px-8 py-16 md:py-24">
+        <header class="text-center mb-16">
+            <div class="flex justify-center items-center gap-4 mb-6">
+                <div class="h-[1px] w-12 bg-[#f8ad5c]"></div>
+                <span class="text-[10px] uppercase tracking-[0.6em] font-work font-black text-[#f7e4cc]">Design & Growth Studio</span>
+                <div class="h-[1px] w-12 bg-[#f8ad5c]"></div>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-roca font-light mb-4 tracking-tight leading-none italic text-[#f7e4cc]">
+                Brand <span class="not-italic font-bold text-white">Cultivation</span>
+            </h1>
+            <p class="text-lg opacity-80 font-work tracking-widest uppercase text-[9px] font-black text-[#f8ad5c]">
+                Intentional Identity for Small Business
+            </p>
         </header>
 
-        {/* Start Card */}
-        {currentStep === -1 && !isFinished && (
-          <div className="bg-[#f7e4cc] p-10 md:p-16 rounded-[40px] shadow-2xl shadow-black/20 text-center animate-in fade-in zoom-in duration-700">
-            <div className="flex justify-center mb-10">
-              <div className="relative">
-                <div className="absolute inset-0 bg-[#f8ad5c] blur-2xl opacity-40 animate-pulse" />
-                <Sprout className="w-20 h-20 text-[#325453] relative" strokeWidth={1} />
-              </div>
+        <div id="start-card" class="bg-[#f7e4cc] p-10 md:p-16 rounded-[40px] shadow-2xl shadow-black/20 text-center fade-in">
+            <div class="flex justify-center mb-10">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-[#f8ad5c] blur-2xl opacity-40 animate-pulse"></div>
+                    <i data-lucide="sprout" class="w-20 h-20 text-[#325453] relative" stroke-width="1"></i>
+                </div>
             </div>
-            <h2 className="text-3xl font-roca italic mb-6 text-[#325453]">Is your brand ready to grow?</h2>
-            <p className="mb-10 text-[#325453]/70 leading-relaxed font-work text-sm tracking-wide font-medium">
-              We help small businesses build identities that feel established and professional. Take our comprehensive 10-point audit to see where your brand stands today.
+            <h2 class="text-3xl font-roca italic mb-6 text-[#325453]">Is your brand ready to grow?</h2>
+            <p class="mb-10 text-[#325453]/70 leading-relaxed font-work text-sm tracking-wide font-medium">
+                We help small businesses build identities that feel established and professional. Take our 10-point audit to see where your brand stands today.
             </p>
-            <button 
-              onClick={() => setCurrentStep(0)}
-              className="w-full bg-[#f8ad5c] hover:bg-[#e69b4d] text-[#325453] px-12 py-6 rounded-full font-work font-black text-[10px] uppercase tracking-[0.4em] transition-all transform hover:scale-[1.02] shadow-xl flex items-center justify-center gap-3"
-            >
-              Take the Audit <ChevronRight size={16} />
+            <button onclick="startQuiz()" class="w-full bg-[#f8ad5c] hover:bg-[#e69b4d] text-[#325453] px-12 py-6 rounded-full font-work font-black text-[10px] uppercase tracking-[0.4em] transition-all transform hover:scale-[1.02] shadow-xl flex items-center justify-center gap-3">
+                Take the Audit <i data-lucide="chevron-right" class="w-4 h-4"></i>
             </button>
-          </div>
-        )}
+        </div>
 
-        {/* Steps */}
-        {currentStep >= 0 && !isFinished && (
-          <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-700">
-            <div className="flex justify-between items-end mb-2 px-2">
-              <span className="text-[10px] uppercase tracking-widest font-work font-black text-[#f8ad5c]">
-                {QUIZ_DATA[currentStep].category}
-              </span>
-              <span className="text-[10px] font-work text-white/60 font-black">
-                {currentStep + 1} of {QUIZ_DATA.length}
-              </span>
+        <div id="quiz-card" class="hidden space-y-10 fade-in">
+            <div class="flex justify-between items-end mb-2 px-2">
+                <span id="category-label" class="text-[10px] uppercase tracking-widest font-work font-black text-[#f8ad5c]">Category</span>
+                <span id="step-label" class="text-[10px] font-work text-white/60 font-black">1 of 10</span>
             </div>
-            <div className="w-full bg-black/10 h-[3px] rounded-full overflow-hidden backdrop-blur-sm">
-              <div 
-                className="bg-[#f8ad5c] h-full transition-all duration-700 ease-out"
-                style={{ width: `${((currentStep + 1) / QUIZ_DATA.length) * 100}%` }}
-              />
+            <div class="w-full bg-black/10 h-[3px] rounded-full overflow-hidden backdrop-blur-sm">
+                <div id="progress-bar" class="bg-[#f8ad5c] h-full progress-bar" style="width: 0%"></div>
             </div>
 
-            <div className="bg-[#f7e4cc] p-8 md:p-12 rounded-[40px] shadow-2xl shadow-black/20 border border-white/50">
-              <h2 className="text-3xl font-roca text-[#325453] mb-10 leading-[1.3] italic">
-                {QUIZ_DATA[currentStep].question}
-              </h2>
-
-              <div className="space-y-4">
-                {QUIZ_DATA[currentStep].options.map((option, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => handleSelect(option.points)}
-                    className={`w-full text-left p-6 rounded-[24px] border-2 transition-all flex items-center justify-between group
-                      ${answers[currentStep] === option.points 
-                        ? 'border-[#325453] bg-white' 
-                        : 'border-transparent bg-black/5 hover:bg-white/50'
-                      }`}
-                  >
-                    <span className={`text-[14px] font-work transition-colors leading-relaxed ${answers[currentStep] === option.points ? 'text-[#b92a0f] font-bold' : 'text-[#325453]/80 font-medium'}`}>
-                      {option.text}
-                    </span>
-                    <div className={`w-3 h-3 rounded-full transition-all duration-500 ${answers[currentStep] === option.points ? 'bg-[#f8ad5c] ring-4 ring-[#f8ad5c]/30 scale-125' : 'bg-[#325453]/10 group-hover:bg-[#325453]/20'}`} />
-                  </button>
-                ))}
-              </div>
+            <div class="bg-[#f7e4cc] p-8 md:p-12 rounded-[40px] shadow-2xl shadow-black/20 border border-white/50">
+                <h2 id="question-text" class="text-3xl font-roca text-[#325453] mb-10 leading-[1.3] italic">Question?</h2>
+                <div id="options-container" class="space-y-4">
+                    </div>
             </div>
 
-            <button 
-              onClick={() => setCurrentStep(prev => Math.max(-1, prev - 1))}
-              className="mx-auto text-white/50 hover:text-[#f8ad5c] flex items-center gap-2 transition-colors font-work text-[10px] uppercase tracking-widest font-black"
-            >
-              <ChevronLeft size={14} /> Back
+            <button onclick="prevStep()" class="mx-auto text-white/50 hover:text-[#f8ad5c] flex items-center gap-2 transition-colors font-work text-[10px] uppercase tracking-widest font-black">
+                <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i> Back
             </button>
-          </div>
-        )}
+        </div>
 
-        {/* Results */}
-        {isFinished && (
-          <div className="bg-[#f7e4cc] p-10 md:p-16 rounded-[60px] shadow-2xl shadow-black/30 text-center animate-in zoom-in-95 duration-1000">
-            <div className="flex justify-center mb-8">
-              <div className="relative p-8 rounded-full bg-white/50">
-                <ActiveIcon className="w-16 h-16 text-[#b92a0f] relative z-10" strokeWidth={1} />
-                <div className="absolute inset-0 bg-[#f8ad5c] opacity-30 blur-2xl rounded-full animate-pulse" />
-              </div>
+        <div id="result-card" class="hidden bg-[#f7e4cc] p-10 md:p-16 rounded-[60px] shadow-2xl shadow-black/30 text-center fade-in">
+            <div class="flex justify-center mb-8">
+                <div class="relative p-8 rounded-full bg-white/50">
+                    <i id="result-icon" data-lucide="flower-2" class="w-16 h-16 text-[#b92a0f] relative z-10" stroke-width="1"></i>
+                    <div class="absolute inset-0 bg-[#f8ad5c] opacity-30 blur-2xl rounded-full animate-pulse"></div>
+                </div>
             </div>
+            <h2 class="text-[10px] font-work font-black uppercase tracking-[0.5em] text-[#f8ad5c] mb-4">Your Brand Score</h2>
+            <h3 id="result-title" class="text-4xl md:text-6xl font-roca mb-8 text-[#325453] italic tracking-tight">Result Title</h3>
             
-            <h2 className="text-[10px] font-work font-black uppercase tracking-[0.5em] text-[#f8ad5c] mb-4">Your Brand Score</h2>
-            <h3 className="text-4xl md:text-6xl font-roca mb-8 text-[#325453] italic tracking-tight">
-              {getResultTier().title}
-            </h3>
-            
-            <div className="flex items-center justify-center gap-12 mb-12">
-              <div className="text-center">
-                <span className="block text-5xl font-roca text-[#b92a0f]">{totalScore}</span>
-                <span className="text-[9px] uppercase font-work font-black tracking-[0.2em] text-[#325453]/40">Current Score</span>
-              </div>
-              <div className="h-12 w-[1px] bg-[#325453]/10" />
-              <div className="text-center">
-                <span className="block text-5xl font-roca text-[#325453]/20">{maxPossibleScore}</span>
-                <span className="text-[9px] uppercase font-work font-black tracking-[0.2em] text-[#325453]/40">Perfect Bloom</span>
-              </div>
+            <div class="flex items-center justify-center gap-12 mb-12">
+                <div class="text-center">
+                    <span id="final-score" class="block text-5xl font-roca text-[#b92a0f]">0</span>
+                    <span class="text-[9px] uppercase font-work font-black tracking-[0.2em] text-[#325453]/40">Current Score</span>
+                </div>
+                <div class="h-12 w-[1px] bg-[#325453]/10"></div>
+                <div class="text-center">
+                    <span class="block text-5xl font-roca text-[#325453]/20">50</span>
+                    <span class="text-[9px] uppercase font-work font-black tracking-[0.2em] text-[#325453]/40">Perfect Bloom</span>
+                </div>
             </div>
 
-            <p className="text-[#325453]/60 mb-12 leading-[1.8] max-w-sm mx-auto font-work text-[15px] font-light italic">
-              "{getResultTier().description}"
+            <p id="result-desc" class="text-[#325453]/60 mb-12 leading-[1.8] max-w-sm mx-auto font-work text-[15px] font-light italic">"Description"</p>
+
+            <div class="space-y-6">
+                <button class="w-full bg-[#f8ad5c] text-[#325453] py-6 rounded-full font-work font-black text-[10px] uppercase tracking-[0.4em] hover:bg-[#e69b4d] transition-all shadow-xl flex items-center justify-center gap-3">
+                    Book a Growth Session <i data-lucide="zap" class="w-4 h-4"></i>
+                </button>
+                <button onclick="resetQuiz()" class="w-full text-[#325453]/40 font-work text-[10px] uppercase tracking-widest font-black hover:text-[#b92a0f] transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Start Over
+                </button>
+            </div>
+        </div>
+
+        <footer class="mt-24 text-center pb-8">
+            <p class="text-[9px] text-[#f7e4cc]/40 uppercase tracking-[0.8em] font-work font-black">
+                Modernista Creative • Design & Growth Consultancy
             </p>
-
-            <div className="space-y-6">
-              <button className="group w-full bg-[#f8ad5c] text-[#325453] py-6 rounded-full font-work font-black text-[10px] uppercase tracking-[0.4em] hover:bg-[#e69b4d] transition-all shadow-xl flex items-center justify-center gap-3">
-                Book a Growth Session <Zap size={16} />
-              </button>
-              <button 
-                onClick={resetQuiz}
-                className="w-full text-[#325453]/40 font-work text-[10px] uppercase tracking-widest font-black hover:text-[#b92a0f] transition-all flex items-center justify-center gap-2"
-              >
-                <RotateCcw size={14} /> Start Over
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Footer */}
-        <footer className="mt-24 text-center pb-8">
-          <p className="text-[9px] text-[#f7e4cc]/40 uppercase tracking-[0.8em] font-work font-black">
-            Modernista Creative • Design & Growth Consultancy
-          </p>
         </footer>
-      </main>
-    </div>
-  );
-};
+    </main>
 
-export default App;
+    <script>
+        const QUIZ_DATA = [
+            { id: 1, category: "Visual Foundation", question: "How consistent is your business identity across your website, socials, and physical touchpoints?", options: [{ text: "A bit disjointed—it feels like different brands.", points: 1 }, { text: "Mostly consistent, but outgrown.", points: 3 }, { text: "Seamless and instantly recognizable.", points: 5 }] },
+            { id: 2, category: "Brand Voice", question: "Do you have a clear way of speaking that attracts your ideal client naturally?", options: [{ text: "I'm not sure we have a defined 'voice'.", points: 1 }, { text: "We have a vibe, but struggle with words.", points: 3 }, { text: "Messaging is clear and converts.", points: 5 }] },
+            { id: 3, category: "Strategic Roots", question: "Is your brand built on a clear strategy, or are you making decisions on the fly?", options: [{ text: "We're mostly winging it.", points: 1 }, { text: "Goals aren't documented or followed.", points: 3 }, { text: "Every decision is backed by a plan.", points: 5 }] },
+            { id: 4, category: "Customer Journey", question: "How would you describe the experience a client has from discovery to purchase?", options: [{ text: "Manual and clunky.", points: 1 }, { text: "Functional, but lacks 'wow' factor.", points: 3 }, { text: "Exceptional and intentional.", points: 5 }] },
+            { id: 5, category: "Market Presence", question: "How easily does your brand stand out among competitors in your specific niche?", options: [{ text: "We tend to blend in.", points: 1 }, { text: "We have some unique elements.", points: 3 }, { text: "Distinct. We are the obvious choice.", points: 5 }] },
+            { id: 6, category: "Brand Recognition", question: "If your logo was removed, would customers still recognize your brand?", options: [{ text: "Likely not.", points: 1 }, { text: "Maybe, if they follow us closely.", points: 3 }, { text: "Absolutely. Visual language is strong.", points: 5 }] },
+            { id: 7, category: "Engagement & Community", question: "How deep is the connection your audience feels with your brand's mission?", options: [{ text: "Personal connection is low.", points: 1 }, { text: "They like us, but aren't advocates.", points: 3 }, { text: "Deep connection and shared values.", points: 5 }] },
+            { id: 8, category: "Delivery & Presentation", question: "Does your final delivery reflect your premium value?", options: [{ text: "Purely functional.", points: 1 }, { text: "Neat, but lacks signature touch.", points: 3 }, { text: "Presentation is as good as the product.", points: 5 }] },
+            { id: 9, category: "Future Scalability", question: "Could your current branding handle a 5x increase in business?", options: [{ text: "No, it would feel too restricted.", points: 1 }, { text: "It could work with manual tweaking.", points: 3 }, { text: "System is flexible and built to scale.", points: 5 }] },
+            { id: 10, category: "Confidence & Impact", question: "When you share your business, do you feel it represents your potential?", options: [{ text: "I feel a bit embarrassed sometimes.", points: 1 }, { text: "It's okay, but could be better.", points: 3 }, { text: "Absolute confidence.", points: 5 }] }
+        ];
+
+        let currentStep = -1;
+        let answers = {};
+
+        function startQuiz() {
+            currentStep = 0;
+            updateUI();
+        }
+
+        function handleSelect(points) {
+            answers[currentStep] = points;
+            if (currentStep < QUIZ_DATA.length - 1) {
+                setTimeout(() => {
+                    currentStep++;
+                    updateUI();
+                }, 400);
+            } else {
+                setTimeout(() => {
+                    showResults();
+                }, 600);
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                updateUI();
+            } else {
+                currentStep = -1;
+                updateUI();
+            }
+        }
+
+        function updateUI() {
+            const startCard = document.getElementById('start-card');
+            const quizCard = document.getElementById('quiz-card');
+            const resultCard = document.getElementById('result-card');
+
+            if (currentStep === -1) {
+                startCard.classList.remove('hidden');
+                quizCard.classList.add('hidden');
+                resultCard.classList.add('hidden');
+            } else {
+                startCard.classList.add('hidden');
+                quizCard.classList.remove('hidden');
+                
+                const data = QUIZ_DATA[currentStep];
+                document.getElementById('category-label').innerText = data.category;
+                document.getElementById('step-label').innerText = `${currentStep + 1} of ${QUIZ_DATA.length}`;
+                document.getElementById('progress-bar').style.width = `${((currentStep + 1) / QUIZ_DATA.length) * 100}%`;
+                document.getElementById('question-text').innerText = data.question;
+
+                const container = document.getElementById('options-container');
+                container.innerHTML = '';
+                data.options.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = "w-full text-left p-6 rounded-[24px] border-2 border-transparent bg-black/5 hover:bg-white/50 transition-all flex items-center justify-between group";
+                    btn.onclick = () => handleSelect(opt.points);
+                    btn.innerHTML = `
+                        <span class="text-[14px] font-work text-[#325453]/80 font-medium">${opt.text}</span>
+                        <div class="w-3 h-3 rounded-full bg-[#325453]/10 group-hover:bg-[#325453]/20 transition-all"></div>
+                    `;
+                    container.appendChild(btn);
+                });
+            }
+            lucide.createIcons();
+        }
+
+        function showResults() {
+            document.getElementById('quiz-card').classList.add('hidden');
+            document.getElementById('result-card').classList.remove('hidden');
+            
+            const totalScore = Object.values(answers).reduce((a, b) => a + b, 0);
+            document.getElementById('final-score').innerText = totalScore;
+            
+            const percentage = (totalScore / 50) * 100;
+            let title, desc, icon;
+
+            if (percentage >= 80) {
+                title = "The Perennial Brand";
+                desc = "Your brand is in full, magnificent bloom. It is hardy, recognizable, and deeply rooted in strategy.";
+                icon = "flower-2";
+            } else if (percentage >= 50) {
+                title = "The Budding Growth";
+                desc = "You have a healthy foundation, but your brand needs more structure to reach its full height.";
+                icon = "sprout";
+            } else {
+                title = "The Emerging Sapling";
+                desc = "You have a great idea, but the brand 'soil' needs more nutrients. Let's deepen strategy.";
+                icon = "leaf";
+            }
+
+            document.getElementById('result-title').innerText = title;
+            document.getElementById('result-desc').innerText = desc;
+            document.getElementById('result-icon').setAttribute('data-lucide', icon);
+            lucide.createIcons();
+        }
+
+        function resetQuiz() {
+            currentStep = -1;
+            answers = {};
+            updateUI();
+        }
+
+        // Initialize icons on load
+        lucide.createIcons();
+    </script>
+</body>
+</html>
