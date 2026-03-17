@@ -1,0 +1,250 @@
+import React, { useState, useMemo } from 'react';
+import { 
+  ChevronRight, 
+  ChevronLeft, 
+  RotateCcw, 
+  Flower2, 
+  Leaf, 
+  Sprout, 
+  Target, 
+  Box, 
+  Zap,
+  FileText,
+  Home,
+  ArrowRight,
+  Download
+} from 'lucide-react';
+
+/**
+ * TUTOR NOTE: 
+ * To add a new tool:
+ * 1. Add a new string to the 'view' state (e.g., 'pdf-maker')
+ * 2. Add a button in the 'HOME_MENU' section that sets that view.
+ * 3. Add a conditional block in the main return for that view.
+ */
+
+const QUIZ_DATA = [
+  {
+    id: 1,
+    category: "Visual Foundation",
+    question: "How consistent is your business identity across your website, socials, and physical touchpoints?",
+    options: [
+      { text: "A bit disjointed—it feels like different brands depending on the platform.", points: 1 },
+      { text: "Mostly consistent, but some areas feel like they've been outgrown.", points: 3 },
+      { text: "Seamless. Our customers recognize us instantly, no matter where they find us.", points: 5 }
+    ]
+  },
+  {
+    id: 2,
+    category: "Brand Voice",
+    question: "Do you have a clear way of speaking that attracts your ideal client naturally?",
+    options: [
+      { text: "I'm not sure we have a defined 'voice' yet.", points: 1 },
+      { text: "We have a vibe, but we struggle to put it into the right words.", points: 3 },
+      { text: "Yes, our messaging is clear, welcoming, and converts the right people.", points: 5 }
+    ]
+  }
+  // ... Add your other 8 questions here
+];
+
+const App = () => {
+  // --- NAVIGATION STATE ---
+  // This is the "Switchboard". Values: 'home', 'brand-audit', 'pdf-maker'
+  const [view, setView] = useState('home');
+
+  // --- BRAND AUDIT STATE ---
+  const [auditStep, setAuditStep] = useState(0);
+  const [auditAnswers, setAuditAnswers] = useState({});
+  const [auditFinished, setAuditFinished] = useState(false);
+
+  // --- PDF MAKER STATE (Placeholder for your logic) ---
+  const [pdfContent, setPdfContent] = useState("");
+
+  // --- STYLING ---
+  const colors = {
+    carnelian: "#b92a0f",
+    champagne: "#f7e4cc",
+    rajah: "#f8ad5c",
+    darkSlate: "#325453",
+  };
+
+  // --- AUDIT LOGIC ---
+  const totalAuditScore = useMemo(() => {
+    return Object.values(auditAnswers).reduce((acc, curr) => acc + curr, 0);
+  }, [auditAnswers]);
+
+  const handleAuditSelect = (points) => {
+    setAuditAnswers(prev => ({ ...prev, [auditStep]: points }));
+    if (auditStep < QUIZ_DATA.length - 1) {
+      setTimeout(() => setAuditStep(prev => prev + 1), 400);
+    } else {
+      setTimeout(() => setAuditFinished(true), 600);
+    }
+  };
+
+  const resetAudit = () => {
+    setAuditAnswers({});
+    setAuditStep(0);
+    setAuditFinished(false);
+  };
+
+  return (
+    <div className="min-h-screen relative overflow-hidden" style={{ backgroundColor: colors.carnelian, color: colors.darkSlate }}>
+      
+      {/* FONTS & TEXTURE */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Work+Sans:wght@300;400;600;900&display=swap');
+        .font-roca { font-family: 'Lora', serif; }
+        .font-work { font-family: 'Work Sans', sans-serif; }
+      `}</style>
+      <div className="fixed inset-0 pointer-events-none opacity-[0.12] mix-blend-overlay" 
+           style={{ backgroundImage: `url("https://www.transparenttextures.com/patterns/natural-paper.png")` }} />
+
+      {/* TOP NAVIGATION BAR */}
+      <nav className="relative z-20 flex justify-between items-center px-8 py-6">
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => setView('home')}>
+            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-[#b92a0f]">
+                <Box size={18} />
+            </div>
+            <span className="font-roca italic text-white text-xl">Ye Tools</span>
+        </div>
+        
+        {view !== 'home' && (
+          <button 
+            onClick={() => setView('home')}
+            className="flex items-center gap-2 text-[10px] font-work font-black uppercase tracking-widest text-[#f8ad5c] hover:text-white transition-colors"
+          >
+            <Home size={14} /> Back to Hub
+          </button>
+        )}
+      </nav>
+
+      <main className="relative z-10 max-w-4xl mx-auto px-8 pb-24">
+        
+        {/* ==========================================
+            VIEW: HOME MENU
+            ========================================== */}
+        {view === 'home' && (
+          <div className="animate-in fade-in zoom-in duration-500">
+            <header className="mb-12 text-center md:text-left">
+                <h2 className="text-5xl md:text-7xl font-roca text-white italic mb-4">The Workspace</h2>
+                <p className="font-work text-[10px] uppercase tracking-[0.6em] text-[#f8ad5c] font-black">Design & Strategy Toolkit</p>
+            </header>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* BOX 1: BRAND AUDIT */}
+              <button 
+                onClick={() => setView('brand-audit')}
+                className="group bg-[#f7e4cc] p-10 rounded-[40px] text-left hover:scale-[1.02] transition-all shadow-2xl flex flex-col h-full"
+              >
+                <div className="bg-[#b92a0f] w-14 h-14 rounded-2xl flex items-center justify-center text-white mb-8 group-hover:rotate-6 transition-transform">
+                    <Target size={28} />
+                </div>
+                <h3 className="font-roca text-3xl italic mb-3">Brand Cultivation Audit</h3>
+                <p className="font-work text-sm text-[#325453]/70 mb-8 flex-grow">Evaluate your business identity across 10 strategic touchpoints.</p>
+                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#b92a0f]">
+                    Open Audit <ArrowRight size={14} />
+                </div>
+              </button>
+
+              {/* BOX 2: PDF MAKER */}
+              <button 
+                onClick={() => setView('pdf-maker')}
+                className="group bg-white/10 border-2 border-white/20 p-10 rounded-[40px] text-left hover:bg-white/20 transition-all flex flex-col h-full"
+              >
+                <div className="bg-[#f8ad5c] w-14 h-14 rounded-2xl flex items-center justify-center text-[#325453] mb-8">
+                    <FileText size={28} />
+                </div>
+                <h3 className="font-roca text-3xl italic mb-3 text-white">Proposal PDF Maker</h3>
+                <p className="font-work text-sm text-white/60 mb-8 flex-grow">Generate professional brand strategy PDFs for your clients instantly.</p>
+                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#f8ad5c]">
+                    Open Maker <ArrowRight size={14} />
+                </div>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ==========================================
+            VIEW: BRAND AUDIT
+            ========================================== */}
+        {view === 'brand-audit' && (
+          <div className="max-w-2xl mx-auto animate-in slide-in-from-bottom-8 duration-500">
+            {!auditFinished ? (
+              <div className="space-y-8">
+                <div className="flex justify-between items-end text-white/60 font-work text-[10px] font-black uppercase tracking-[0.2em]">
+                    <span>{QUIZ_DATA[auditStep].category}</span>
+                    <span>{auditStep + 1} / {QUIZ_DATA.length}</span>
+                </div>
+                <div className="bg-[#f7e4cc] p-8 md:p-12 rounded-[40px] shadow-2xl">
+                    <h2 className="text-3xl font-roca text-[#325453] mb-10 italic leading-snug">
+                        {QUIZ_DATA[auditStep].question}
+                    </h2>
+                    <div className="space-y-3">
+                        {QUIZ_DATA[auditStep].options.map((opt, i) => (
+                            <button key={i} onClick={() => handleAuditSelect(opt.points)}
+                                    className="w-full text-left p-6 rounded-2xl bg-black/5 hover:bg-white border-2 border-transparent hover:border-[#b92a0f] transition-all font-work text-sm">
+                                {opt.text}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-[#f7e4cc] p-12 rounded-[40px] text-center">
+                  <h2 className="font-roca text-4xl italic mb-4">Audit Complete</h2>
+                  <p className="font-work text-6xl text-[#b92a0f] mb-8">{totalAuditScore}</p>
+                  <button onClick={resetAudit} className="text-[#325453]/40 uppercase text-[10px] font-black tracking-widest flex items-center gap-2 mx-auto">
+                    <RotateCcw size={14} /> Retake Audit
+                  </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ==========================================
+            VIEW: PDF MAKER (Paste your PDF logic here)
+            ========================================== */}
+        {view === 'pdf-maker' && (
+          <div className="max-w-2xl mx-auto animate-in slide-in-from-bottom-8 duration-500">
+            <div className="bg-white p-10 md:p-16 rounded-[40px] shadow-2xl">
+                <div className="flex items-center gap-4 mb-8">
+                    <FileText className="text-[#f8ad5c]" size={32} />
+                    <h2 className="text-3xl font-roca italic text-[#325453]">PDF Strategy Maker</h2>
+                </div>
+                
+                {/* TUTOR: This is where you put your form inputs and state */}
+                <div className="space-y-6">
+                    <div className="space-y-2">
+                        <label className="text-[10px] uppercase font-black tracking-widest text-[#325453]/40">Client Name</label>
+                        <input 
+                            type="text" 
+                            className="w-full p-4 rounded-xl bg-[#f7e4cc]/30 border-2 border-[#f7e4cc] focus:border-[#f8ad5c] outline-none font-work"
+                            placeholder="e.g. Flora & Co."
+                        />
+                    </div>
+                    
+                    <button className="w-full bg-[#325453] text-white py-6 rounded-full font-work font-black text-[10px] uppercase tracking-[0.4em] flex items-center justify-center gap-3">
+                        Generate & Download PDF <Download size={16} />
+                    </button>
+                    
+                    <p className="text-center text-[11px] font-work text-[#325453]/40 italic">
+                        Note: Connect your existing PDF generation logic inside this view block.
+                    </p>
+                </div>
+            </div>
+          </div>
+        )}
+
+      </main>
+
+      <footer className="fixed bottom-8 w-full text-center px-8">
+          <p className="text-[9px] text-white/30 uppercase tracking-[0.8em] font-work font-black">
+            Modernista Creative • {view === 'home' ? 'Central Hub' : view.replace('-', ' ')}
+          </p>
+      </footer>
+    </div>
+  );
+};
+
+export default App;
