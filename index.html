@@ -20,32 +20,66 @@
         @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Work+Sans:wght@300;400;600;900&display=swap');
         
         :root {
-            --carnelian: #b92a0f;
-            --champagne: #f7e4cc;
-            --rajah: #f8ad5c;
-            --dark-slate: #325453;
+            --clay: #E68A77;
+            --sage: #D1E7E0;
+            --navy: #2B426E;
+            --honey: #E6C14B;
+            --cream: #FBF7EF;
         }
 
         .font-roca { font-family: 'Lora', serif; }
         .font-work { font-family: 'Work Sans', sans-serif; }
         
-        .grid-bg {
-            background-image: linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
+        body {
+            background-color: var(--cream);
+            color: var(--navy);
+            margin: 0;
+            padding: 0;
         }
 
-        .natural-paper {
+        .texture-overlay {
             background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            pointer-events: none;
         }
 
-        /* Custom scrollbar for brand feel */
+        /* Branding Arch Mask */
+        .arch-shape {
+            border-radius: 200px 200px 0 0;
+        }
+
+        /* Organic Animations */
+        .flower-spin {
+            animation: slowRotate 30s linear infinite;
+        }
+
+        @keyframes slowRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .wave-motion {
+            animation: waveMotion 12s ease-in-out infinite;
+        }
+
+        @keyframes waveMotion {
+            0%, 100% { transform: scaleY(1) translateY(0); }
+            50% { transform: scaleY(1.1) translateY(-10px); }
+        }
+
+        /* Glassmorphism for Focus */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--carnelian); }
-        ::-webkit-scrollbar-thumb { background: var(--rajah); border-radius: 10px; }
+        ::-webkit-scrollbar-track { background: var(--cream); }
+        ::-webkit-scrollbar-thumb { background: var(--clay); border-radius: 10px; }
     </style>
 </head>
-<body class="bg-[#b92a0f]">
+<body class="font-work">
     <div id="root"></div>
 
     <script type="text/babel">
@@ -56,19 +90,19 @@
                 id: 'audit',
                 title: "Brand Cultivation Audit",
                 description: "Evaluate business identity across 10 strategic touchpoints.",
-                icon: "target",
-                color: "#b92a0f",
-                accent: "text-[#b92a0f]",
+                icon: "sprout",
+                color: "#2B426E", 
+                accent: "text-[#2B426E]",
                 link: "audit.html", 
                 status: "Active"
             },
             {
                 id: 'invoice',
                 title: "Invoice PDF Maker",
-                description: "Generate professional, brand-aligned invoices for your clients.",
+                description: "Generate professional, brand-aligned invoices.",
                 icon: "file-text",
-                color: "#f8ad5c",
-                accent: "text-[#f8ad5c]",
+                color: "#E68A77",
+                accent: "text-[#E68A77]",
                 link: "invoice.html",
                 status: "Active"
             },
@@ -77,8 +111,8 @@
                 title: "Moodboard Generator",
                 description: "Curate visual directions and color palettes instantly.",
                 icon: "layers",
-                color: "#325453",
-                accent: "text-[#325453]",
+                color: "#D1E7E0",
+                accent: "text-[#2B426E]",
                 link: "#", 
                 status: "Coming Soon"
             },
@@ -87,14 +121,13 @@
                 title: "Copy & Voice Guide",
                 description: "Define and document your brand's unique verbal identity.",
                 icon: "pen-tool",
-                color: "#b92a0f",
-                accent: "text-[#b92a0f]",
+                color: "#E6C14B",
+                accent: "text-[#2B426E]",
                 link: "#",
                 status: "Coming Soon"
             }
         ];
 
-        // Small wrapper to handle Lucide icons in React-lite
         const Icon = ({ name, size = 28, className = "" }) => {
             useEffect(() => {
                 if (window.lucide) {
@@ -105,119 +138,142 @@
         };
 
         const App = () => {
-            const colors = {
-                carnelian: "#b92a0f",
-                champagne: "#f7e4cc",
-                rajah: "#f8ad5c",
-                darkSlate: "#325453",
-            };
-
             return (
-                <div className="min-h-screen relative overflow-x-hidden font-work">
-                    {/* BACKGROUND EFFECTS */}
-                    <div className="fixed inset-0 grid-bg opacity-40 pointer-events-none" />
-                    <div className="fixed inset-0 pointer-events-none opacity-[0.12] mix-blend-overlay natural-paper" />
+                <div className="min-h-screen relative flex flex-col">
+                    {/* 1. TEXTURE LAYER (Always Top) */}
+                    <div className="fixed inset-0 opacity-[0.2] mix-blend-multiply texture-overlay z-[100] pointer-events-none" />
 
-                    {/* NAVIGATION */}
-                    <nav className="relative z-20 flex justify-between items-center px-8 py-8 md:px-12">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-[#b92a0f] shadow-lg">
-                                <Icon name="box" size={22} />
-                            </div>
-                            <div>
-                                <h1 className="font-roca italic text-white text-2xl leading-none">Ye Tools</h1>
-                                <p className="font-work text-[8px] uppercase tracking-[0.3em] text-white/50 mt-1 font-bold">Command Center</p>
-                            </div>
-                        </div>
+                    {/* 2. BRANDING BACKGROUND LAYER (Fixed & Immobile) */}
+                    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none">
+                        {/* Sage Arch */}
+                        <div className="absolute top-0 left-[-5%] w-[70%] h-[90%] bg-[#D1E7E0] arch-shape opacity-60"></div>
                         
-                        <div className="hidden md:flex gap-8">
-                            {['Dashboard', 'Analytics', 'Support'].map((item) => (
-                                <button key={item} className="font-work text-[10px] uppercase font-black tracking-widest text-white/60 hover:text-white transition-colors">
-                                    {item}
-                                </button>
-                            ))}
-                        </div>
-                    </nav>
+                        {/* Navy Square Block */}
+                        <div className="absolute top-[25%] left-0 w-[45%] h-[50%] bg-[#2B426E] rounded-r-[60px] opacity-90 shadow-2xl"></div>
 
-                    {/* MAIN CONTENT */}
-                    <main className="relative z-10 max-w-6xl mx-auto px-8 py-12 md:py-20">
+                        {/* Clay Flower */}
+                        <svg className="absolute top-[5%] right-[5%] w-40 h-40 text-[#E68A77] flower-spin opacity-90" viewBox="0 0 100 100">
+                            <g fill="currentColor">
+                                <ellipse cx="50" cy="25" rx="8" ry="20" />
+                                <ellipse cx="50" cy="75" rx="8" ry="20" />
+                                <ellipse cx="25" cy="50" rx="20" ry="8" />
+                                <ellipse cx="75" cy="50" rx="20" ry="8" />
+                                <ellipse cx="32" cy="32" rx="20" ry="8" transform="rotate(45 32 32)" />
+                                <ellipse cx="68" cy="68" rx="20" ry="8" transform="rotate(45 68 68)" />
+                                <ellipse cx="68" cy="32" rx="20" ry="8" transform="rotate(-45 68 32)" />
+                                <ellipse cx="32" cy="68" rx="20" ry="8" transform="rotate(-45 32 68)" />
+                            </g>
+                        </svg>
+
+                        {/* Yellow Wave Base */}
+                        <div className="absolute bottom-[-2%] left-0 w-full wave-motion">
+                            <svg viewBox="0 0 1440 400" className="text-[#E6C14B] fill-current opacity-90">
+                                <path d="M0,224 C180,256 360,288 540,272 C720,256 900,192 1080,176 C1260,160 1440,192 1440,192 L1440,400 L0,400 Z"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    {/* 3. INTERACTIVE CONTENT LAYER (Scrollable) */}
+                    <div className="relative z-10 flex flex-col min-h-screen">
                         
-                        <header className="mb-16 max-w-2xl">
-                            <h2 className="text-6xl md:text-8xl font-roca text-white italic mb-6 leading-tight">The Workspace</h2>
-                            <p className="font-work text-sm md:text-base text-white/70 leading-relaxed max-w-lg">
-                                Welcome back. Access your suite of brand strategy and design tools from a single, unified interface.
-                            </p>
-                        </header>
-
-                        {/* SCALABLE GRID */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {TOOLS.map((tool) => (
-                                <a 
-                                    key={tool.id}
-                                    href={tool.status === 'Active' ? tool.link : '#'}
-                                    className={`group relative bg-[#f7e4cc] p-8 md:p-12 rounded-[48px] text-left transition-all duration-500 flex flex-col h-full shadow-2xl overflow-hidden
-                                        ${tool.status === 'Coming Soon' ? 'opacity-60 grayscale cursor-default' : 'hover:scale-[1.02] hover:-translate-y-1'}
-                                    `}
-                                >
-                                    {/* Tool Icon & Status */}
-                                    <div className="flex justify-between items-start mb-10">
-                                        <div 
-                                            className="w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-xl transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110"
-                                            style={{ backgroundColor: tool.color }}
-                                        >
-                                            <Icon name={tool.icon} size={28} />
-                                        </div>
-                                        <span className={`font-work text-[9px] font-black uppercase tracking-widest px-4 py-2 rounded-full border-2 border-black/5 ${tool.accent}`}>
-                                            {tool.status}
-                                        </span>
-                                    </div>
-
-                                    {/* Tool Identity */}
-                                    <div className="flex-grow">
-                                        <h3 className="font-roca text-3xl md:text-4xl italic mb-4 text-[#325453]">{tool.title}</h3>
-                                        <p className="font-work text-sm md:text-base text-[#325453]/60 mb-8 max-w-xs leading-relaxed">
-                                            {tool.description}
-                                        </p>
-                                    </div>
-
-                                    {/* Action Button */}
-                                    <div className={`mt-auto flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 ${tool.accent}`}>
-                                        {tool.status === 'Active' ? (
-                                            <React.Fragment>Open Tool <Icon name="arrow-right" size={16} className="group-hover:translate-x-2 transition-transform" /></React.Fragment>
-                                        ) : (
-                                            <React.Fragment>Under Construction</React.Fragment>
-                                        )}
-                                    </div>
-
-                                    {/* Subtle background decoration */}
-                                    <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-                                        <Icon name="external-link" size={120} />
-                                    </div>
-                                </a>
-                            ))}
-                        </div>
-
-                        {/* SYSTEM STATS */}
-                        <section className="mt-20 pt-12 border-t border-white/10 grid grid-cols-2 md:grid-cols-4 gap-8">
-                            {[
-                                { label: "Active Tools", val: "02" },
-                                { label: "Drafts Created", val: "14" },
-                                { label: "Last Session", val: "2m ago" },
-                                { label: "Hub Version", val: "v2.0" }
-                            ].map((stat, i) => (
-                                <div key={i}>
-                                    <p className="font-work text-[9px] uppercase tracking-widest text-white/40 mb-1">{stat.label}</p>
-                                    <p className="font-roca text-2xl text-white italic">{stat.val}</p>
+                        {/* Fixed-style Navigation */}
+                        <nav className="flex justify-between items-center px-8 py-8 md:px-12">
+                            <div className="flex items-center gap-4 bg-white/30 backdrop-blur-md p-3 pr-6 rounded-2xl shadow-sm border border-white/40">
+                                <div className="w-10 h-10 bg-[#2B426E] rounded-xl flex items-center justify-center text-[#D1E7E0] shadow-md">
+                                    <Icon name="flower-2" size={20} />
                                 </div>
-                            ))}
-                        </section>
-                    </main>
+                                <div className="flex flex-col">
+                                    <span className="text-[9px] uppercase tracking-[0.3em] font-black text-[#2B426E]/60">Modernista</span>
+                                    <h1 className="font-roca italic text-[#2B426E] text-xl leading-none">Ye Tools</h1>
+                                </div>
+                            </div>
+                            
+                            <div className="hidden md:flex gap-4 p-2 bg-white/20 backdrop-blur-md rounded-full border border-white/40 shadow-sm">
+                                {['Garden', 'Library', 'Assets'].map((item) => (
+                                    <button key={item} className="px-6 py-2 rounded-full font-work text-[10px] uppercase font-black tracking-widest text-[#2B426E] hover:bg-[#E68A77] hover:text-white transition-all">
+                                        {item}
+                                    </button>
+                                ))}
+                            </div>
+                        </nav>
 
-                    <footer className="w-full text-center py-12 px-8 border-t border-white/5 mt-12 bg-black/10">
-                        <p className="text-[10px] text-white/20 uppercase tracking-[1em] font-work font-black">
-                            Modernista Creative • Proprietary Ecosystem
-                        </p>
-                    </footer>
+                        {/* Content Body */}
+                        <main className="max-w-6xl mx-auto px-8 py-12 flex-grow w-full">
+                            
+                            <header className="mb-20 text-center md:text-left">
+                                <div className="inline-flex items-center gap-4 mb-4 bg-white/40 backdrop-blur-sm px-4 py-2 rounded-full border border-white/40">
+                                    <div className="h-[2px] w-8 bg-[#E68A77]"></div>
+                                    <span className="text-[10px] uppercase tracking-[0.5em] font-black text-[#2B426E]">Central Command</span>
+                                </div>
+                                <h2 className="text-6xl md:text-8xl font-roca text-[#2B426E] italic mb-6 leading-none tracking-tighter drop-shadow-sm">
+                                    The <span className="not-italic font-bold text-[#E68A77]">Toolbox</span>
+                                </h2>
+                                <p className="font-work text-sm md:text-lg text-[#2B426E]/80 leading-relaxed max-w-lg font-medium italic">
+                                    Your strategic garden is growing. Select a utility to begin cultivating your brand identity.
+                                </p>
+                            </header>
+
+                            {/* GRID - Cards use Backdrop Blur to stay legible over the background shapes */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-24">
+                                {TOOLS.map((tool) => (
+                                    <a 
+                                        key={tool.id}
+                                        href={tool.status === 'Active' ? tool.link : '#'}
+                                        className={`group relative glass-card p-10 md:p-12 rounded-[50px] transition-all duration-500 flex flex-col h-full shadow-lg
+                                            ${tool.status === 'Coming Soon' ? 'opacity-50 cursor-default grayscale-[30%]' : 'hover:scale-[1.02] hover:-translate-y-1 hover:bg-white/80'}
+                                        `}
+                                    >
+                                        <div className="flex justify-between items-start mb-10">
+                                            <div 
+                                                className="w-20 h-20 rounded-[35px] flex items-center justify-center text-white shadow-md transition-all duration-500 group-hover:rotate-3 group-hover:shadow-xl"
+                                                style={{ 
+                                                    backgroundColor: tool.color,
+                                                    color: (tool.color === '#D1E7E0' || tool.color === '#E6C14B') ? '#2B426E' : 'white'
+                                                }}
+                                            >
+                                                <Icon name={tool.icon} size={32} />
+                                            </div>
+                                            <span className={`font-work text-[9px] font-black uppercase tracking-widest px-4 py-2 rounded-full border border-black/5 bg-white/60 ${tool.accent}`}>
+                                                {tool.status}
+                                            </span>
+                                        </div>
+
+                                        <div className="flex-grow">
+                                            <h3 className="font-roca text-4xl italic mb-3 text-[#2B426E] leading-tight">{tool.title}</h3>
+                                            <p className="font-work text-xs md:text-sm text-[#2B426E]/60 mb-8 max-w-xs leading-relaxed font-semibold italic">
+                                                {tool.description}
+                                            </p>
+                                        </div>
+
+                                        <div className={`mt-auto flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.3em] transition-all duration-300 ${tool.accent}`}>
+                                            {tool.status === 'Active' ? (
+                                                <React.Fragment>
+                                                    Open <Icon name="arrow-right" size={14} className="group-hover:translate-x-2 transition-transform" />
+                                                </React.Fragment>
+                                            ) : (
+                                                <span className="opacity-40">Coming Soon</span>
+                                            )}
+                                        </div>
+                                    </a>
+                                ))}
+                            </div>
+                        </main>
+
+                        {/* FOOTER */}
+                        <footer className="relative w-full py-16 px-12 bg-[#2B426E]/95 backdrop-blur-md text-[#FBF7EF] mt-auto border-t border-white/10">
+                            <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+                                <div className="text-center md:text-left">
+                                    <p className="text-[9px] uppercase tracking-[0.8em] font-black mb-3 opacity-40">Modernista Creative Studio</p>
+                                    <p className="text-xs font-roca italic opacity-60">Nurturing clarity, cultivating beauty.</p>
+                                </div>
+                                <div className="flex gap-10 opacity-60">
+                                    <Icon name="instagram" size={18} />
+                                    <Icon name="globe" size={18} />
+                                    <Icon name="mail" size={18} />
+                                </div>
+                            </div>
+                        </footer>
+                    </div>
                 </div>
             );
         };
